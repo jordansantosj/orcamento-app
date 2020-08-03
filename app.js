@@ -29,6 +29,7 @@ class Bd{
             localStorage.setItem('id', 0)
         }
     }
+
     //método responsável pela criação de itens dinâmicos
     getProximoId(){
       //recuperando o id atual
@@ -43,11 +44,31 @@ class Bd{
         localStorage.setItem(id, JSON.stringify(d)) //inclusão do registro da despesa
         localStorage.setItem('id', id) //alteração no valor da chave id
     }
+
+    //método responsável por recuperar registros de despesas e retornar na página "consulta.html"
+    recuperarTodosRegistros(){
+        //Array de despesas
+        let despesas = Array()
+        //recuperar todas as despesas cadastradas em localStorage
+       let id = localStorage.getItem('id')
+       for(let i = 1; i <= id; i++){
+           //recuperar a despesa 
+           let despesa = JSON.parse(localStorage.getItem(i))
+           //pular indices que foram removidos
+           if(despesa === null){
+               continue
+           }
+            //atribuir objetos "despesa" a o array "despesas"
+           despesas.push(despesa)
+       }
+       //retornar valor para a função "carregaListaDespesas"
+       return despesas
+    }
 }
-//instância do objeto bd
+//instância do objeto bd no escopo global
 let bd = new Bd()
 
-//principal função responsavel por cadastrar as despesas
+//função responsavel por cadastrar as despesas
 function cadastrarDespesa(){
     //recuperação dos elementos da página de cadastro
     let ano = document.getElementById('ano')
@@ -89,6 +110,14 @@ function cadastrarDespesa(){
         $('#modalRegistraDespesa').modal('show')
     }
    
+}
+
+//função responsável por mostrar a lista de despesas já cadastradas
+function carregaListaDespesas(){
+    //variável que recebe o return do método "recuperarTodosRegistros" do objeto "bd"
+    let despesas = Array()
+    despesas = bd.recuperarTodosRegistros()
+    console.log(despesas)
 }
 
 
